@@ -24,3 +24,4 @@ EXPOSE 3000
 
 # 9. Start the Next.js production server
 CMD ["npm", "start"]
+#renamed
