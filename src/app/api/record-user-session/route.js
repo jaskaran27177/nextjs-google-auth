@@ -3,13 +3,21 @@ import { Pool } from "pg";
 import { v4 as uuidv4 } from "uuid";
 
 // Setup the PostgreSQL connection
-const pool = new Pool({
-  connectionString: process.env.POSTGRES_URL,
-  ssl:
-    process.env.NODE_ENV === "production"
-      ? { rejectUnauthorized: false }
-      : false,
-});
+const isProd = process.env.NODE_ENV === "production";
+
+const pool = new Pool(
+  isProd
+    ? {
+        user: process.env.DB_USER,
+        password: process.env.DB_PASSWORD,
+        database: process.env.DB_NAME,
+        host: `/cloudsql/${process.env.INSTANCE_CONNECTION_NAME}`,
+      }
+    : {
+        connectionString: process.env.POSTGRES_URL,
+        ssl: false,
+      }
+);
 
 export async function POST(request) {
   try {
